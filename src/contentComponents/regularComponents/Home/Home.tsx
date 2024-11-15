@@ -4,7 +4,9 @@ import SearchBar from "./SearchBar/SearchBar"
 import CategoryFilter from "./CategoryFilter/CategoryFilter"
 import PriceRangeFilter from "./PriceRangeFilter/PriceRangeFilter"
 import SortControls from "./SortControls/SortControls"
+import OrderControls from "./OrderControls/OrderControls"
 import ProductList from "./ProductList/ProductList"
+import Pagination from "./Pagination/Pagination"
 
 const Home = () => {
   /* Holds all the products fetched from the API */
@@ -167,29 +169,33 @@ const Home = () => {
 
   return (
     <div>
-      <SearchBar
-        searchTerm={searchTerm}
-        handleSearchChange={handleSearchChange}
-      />
+      <div className="flex px-4 py-10 m-5">
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          handleCategoryChange={handleCategoryChange}
+        />
 
-      <CategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        handleCategoryChange={handleCategoryChange}
-      />
+        <PriceRangeFilter
+          priceRanges={priceRanges}
+          selectedPriceRange={selectedPriceRange}
+          handlePriceRangeChange={handlePriceRangeChange}
+        />
 
-      <PriceRangeFilter
-        priceRanges={priceRanges}
-        selectedPriceRange={selectedPriceRange}
-        handlePriceRangeChange={handlePriceRangeChange}
-      />
+        <SortControls
+          sortField={sortField}
+          handleSortFieldChange={handleSortFieldChange}
+        />
+        <OrderControls
+          sortOrder={sortOrder}
+          handleSortOrderChange={handleSortOrderChange}
+        />
 
-      <SortControls
-        sortField={sortField}
-        sortOrder={sortOrder}
-        handleSortFieldChange={handleSortFieldChange}
-        handleSortOrderChange={handleSortOrderChange}
-      />
+        <SearchBar
+          searchTerm={searchTerm}
+          handleSearchChange={handleSearchChange}
+        />
+      </div>
 
       {/* Products List */}
       {isLoading ? (
@@ -197,13 +203,15 @@ const Home = () => {
       ) : products.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <ProductList
-          products={products}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePreviousPage={handlePreviousPage}
-          handleNextPage={handleNextPage}
-        />
+        <>
+          <ProductList products={products} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePreviousPage={handlePreviousPage}
+            handleNextPage={handleNextPage}
+          />
+        </>
       )}
     </div>
   )

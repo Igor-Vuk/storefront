@@ -1,5 +1,9 @@
 # STOREFRONT
 
+Moguči problemi:
+
+Prilikom otvaranja detalja o proizvodu, učitavanje slika može biti sporo. To je zato što Slike se dolaze sa CDN-a i nepotrebno su velike.
+
 Link: https://city-map-chi.vercel.app/
 
 Interactive 3D Map with custom models for desktop and mobile.
