@@ -169,33 +169,31 @@ const Home = () => {
 
   return (
     <div>
-      <div className="flex px-4 py-10 m-5">
-        <CategoryFilter
-          categories={categories}
-          selectedCategory={selectedCategory}
-          handleCategoryChange={handleCategoryChange}
-        />
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        handleCategoryChange={handleCategoryChange}
+      />
 
-        <PriceRangeFilter
-          priceRanges={priceRanges}
-          selectedPriceRange={selectedPriceRange}
-          handlePriceRangeChange={handlePriceRangeChange}
-        />
+      <PriceRangeFilter
+        priceRanges={priceRanges}
+        selectedPriceRange={selectedPriceRange}
+        handlePriceRangeChange={handlePriceRangeChange}
+      />
 
-        <SortControls
-          sortField={sortField}
-          handleSortFieldChange={handleSortFieldChange}
-        />
-        <OrderControls
-          sortOrder={sortOrder}
-          handleSortOrderChange={handleSortOrderChange}
-        />
+      <SortControls
+        sortField={sortField}
+        handleSortFieldChange={handleSortFieldChange}
+      />
+      <OrderControls
+        sortOrder={sortOrder}
+        handleSortOrderChange={handleSortOrderChange}
+      />
 
-        <SearchBar
-          searchTerm={searchTerm}
-          handleSearchChange={handleSearchChange}
-        />
-      </div>
+      <SearchBar
+        searchTerm={searchTerm}
+        handleSearchChange={handleSearchChange}
+      />
 
       {/* Products List */}
       {isLoading ? (
