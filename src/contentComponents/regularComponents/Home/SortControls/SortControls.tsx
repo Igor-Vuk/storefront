@@ -1,4 +1,9 @@
-const SortControls = ({ sortField, handleSortFieldChange }) => {
+import { useContext } from "react"
+import { FilterContext } from "../../../../context/FilterContext"
+
+const SortControls = () => {
+  const { sortField, handleSortFieldChange } = useContext(FilterContext)
+
   return (
     <div>
       <label htmlFor="sortField">Sort By: </label>

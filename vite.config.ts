@@ -1,11 +1,10 @@
 import react from "@vitejs/plugin-react"
-import glsl from "vite-plugin-glsl"
 import path from "path"
 import { defineConfig } from "vitest/config"
 import { visualizer } from "rollup-plugin-visualizer"
 
 export default defineConfig({
-  plugins: [react(), glsl(), visualizer()],
+  plugins: [react(), visualizer()],
   root: "src/",
   publicDir: "../public/",
   base: "./",

@@ -2,23 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body
-/* leva */
-.leva-c-TldsY {
-  justify-content: end;
-}
-:root {
-  --leva-sizes-rootWidth: 350px !important;
-}
-
-/* fonts */
-@font-face {
-  font-family: 'YatraOneRegular';
-  src: url('/fonts/YatraOneRegular.ttf') format('truetype'),
-}
-
-/* shadcn */
 @layer base {
 
   :root {

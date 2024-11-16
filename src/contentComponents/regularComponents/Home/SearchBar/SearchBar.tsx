@@ -1,4 +1,8 @@
-const SearchBar = ({ searchTerm, handleSearchChange }) => {
+import { useContext } from "react"
+import { FilterContext } from "../../../../context/FilterContext"
+
+const SearchBar = () => {
+  const { searchTerm, handleSearchChange } = useContext(FilterContext)
   return (
     <div>
       <label htmlFor="search">Search: </label>

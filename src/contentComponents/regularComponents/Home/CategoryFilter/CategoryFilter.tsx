@@ -1,8 +1,10 @@
-const CategoryFilter = ({
-  categories,
-  selectedCategory,
-  handleCategoryChange,
-}) => {
+import { useContext } from "react"
+import { FilterContext } from "../../../../context/FilterContext"
+
+const CategoryFilter = () => {
+  const { categories, selectedCategory, handleCategoryChange } =
+    useContext(FilterContext)
+
   return (
     <div>
       <label htmlFor="category">Category: </label>

@@ -9,7 +9,6 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:@react-three/recommended",
     "plugin:tailwindcss/recommended",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],

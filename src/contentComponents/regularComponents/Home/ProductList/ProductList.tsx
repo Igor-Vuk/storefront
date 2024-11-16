@@ -88,6 +88,7 @@ const ProductList = ({ products }) => {
                 {selectedProduct.title}
               </DialogTitle>
               <DialogDescription>
+                {/* Neki proizvodi nemaju brend pa izgleda koda je cijena u minusu */}
                 {selectedProduct.brand} - ${selectedProduct.price}
               </DialogDescription>
             </DialogHeader>
