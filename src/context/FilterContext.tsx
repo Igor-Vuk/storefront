@@ -30,7 +30,9 @@ export const FilterProvider = ({ children }) => {
     getCategories()
   }, [])
 
-  // Fetch products when sortField, sortOrder, or selectedCategory changes
+  /* Fetch products when sortField, sortOrder, or selectedCategory changes. 
+  We do it like this in larger scale applications. Since API doesn't support 
+  fetching based on price range, we do the filtering on the frontend for it. */
   useEffect(() => {
     const getProducts = async () => {
       setIsLoading(true)
@@ -61,27 +63,22 @@ export const FilterProvider = ({ children }) => {
   // Handlers
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value)
-    // Additional logic like resetting pagination can be added here
   }
 
   const handlePriceRangeChange = (e) => {
     setSelectedPriceRange(e.target.value)
-    // Additional logic like resetting pagination can be added here
   }
 
   const handleSortFieldChange = (e) => {
     setSortField(e.target.value)
-    // Additional logic like resetting pagination can be added here
   }
 
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value)
-    // Additional logic like resetting pagination can be added here
   }
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value)
-    // Additional logic like resetting pagination can be added here
   }
 
   return (

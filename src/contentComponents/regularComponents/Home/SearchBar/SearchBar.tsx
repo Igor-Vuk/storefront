@@ -1,18 +1,17 @@
 import { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
+import { Input } from "@/components/ui/input"
 
 const SearchBar = () => {
   const { searchTerm, handleSearchChange } = useContext(FilterContext)
   return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input
-        type="text"
-        id="search"
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-    </div>
+    <Input
+      type="text"
+      id="search"
+      placeholder="Pretraži artikle"
+      value={searchTerm}
+      onChange={handleSearchChange}
+    />
   )
 }
 

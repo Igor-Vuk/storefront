@@ -17,18 +17,17 @@ const Home = () => {
     isLoading,
   } = useContext(FilterContext)
 
-  // Local state for products to display and pagination
   const [products, setProducts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const itemsPerPage = 20
 
-  // Update products whenever relevant states change
   useEffect(() => {
-    if (allProducts.length > 0) {
+    if (allProducts && allProducts.length > 0) {
       let filteredProducts = [...allProducts]
 
-      // Apply price range filter
+      /* We are doing the price range filtering on the frontend 
+      since API doesn't support it */
       if (selectedPriceRange !== "") {
         if (selectedPriceRange === "100+") {
           filteredProducts = filteredProducts.filter(
@@ -44,7 +43,8 @@ const Home = () => {
         }
       }
 
-      // Apply search filter
+      /* If search term changes, than debouncedSearchTerm changes also after 500ms.
+      We take that search term, make it lower case and filter items based on it  */
       if (debouncedSearchTerm !== "") {
         const searchTermLower = debouncedSearchTerm.toLowerCase()
         filteredProducts = filteredProducts.filter((product) =>
@@ -52,11 +52,13 @@ const Home = () => {
         )
       }
 
-      // Apply sorting
+      /* Items filtered based on price range or search term need to be sorted by 
+      title or price in ascending or descending order*/
       filteredProducts.sort((a, b) => {
         if (sortField === "title") {
           const titleA = a.title.toLowerCase()
           const titleB = b.title.toLowerCase()
+
           if (titleA < titleB) return sortOrder === "asc" ? -1 : 1
           if (titleA > titleB) return sortOrder === "asc" ? 1 : -1
           return 0
@@ -66,10 +68,11 @@ const Home = () => {
         return 0
       })
 
-      // Update total pages
+      /* Update total pages based on filteredProducts */
       setTotalPages(Math.ceil(filteredProducts.length / itemsPerPage))
 
-      // Get current page products
+      /* We set max of 20 items per page. Here we slice 20 items from filteredProducts
+      to show them on current page */
       const indexOfLastItem = currentPage * itemsPerPage
       const indexOfFirstItem = indexOfLastItem - itemsPerPage
       setProducts(filteredProducts.slice(indexOfFirstItem, indexOfLastItem))
@@ -86,7 +89,6 @@ const Home = () => {
     sortOrder,
   ])
 
-  // Debounce the search term input
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm)
@@ -97,7 +99,18 @@ const Home = () => {
     }
   }, [searchTerm])
 
-  // Pagination handlers
+  /* Anytime we change some of the filters we reset current page back to 1 */
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [
+    selectedCategory,
+    selectedPriceRange,
+    debouncedSearchTerm,
+    sortField,
+    sortOrder,
+  ])
+
+  /* Pagination handlers */
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1)
@@ -110,24 +123,12 @@ const Home = () => {
     }
   }
 
-  // Reset current page when filters change
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [
-    selectedCategory,
-    selectedPriceRange,
-    debouncedSearchTerm,
-    sortField,
-    sortOrder,
-  ])
-
   return (
     <div className="p-4">
-      {/* Products List */}
       {isLoading ? (
-        <p className="text-center">Loading products...</p>
+        <p className="text-center">Učitavanje...</p>
       ) : products.length === 0 ? (
-        <p className="text-center">No products found.</p>
+        <p className="text-center">Trenuto nema proizvoda!</p>
       ) : (
         <>
           <ProductList products={products} />

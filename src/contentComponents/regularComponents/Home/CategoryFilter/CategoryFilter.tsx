@@ -1,26 +1,48 @@
 import { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
+import {
+  Select,
+  SelectItem,
+  SelectTrigger,
+  SelectContent,
+  SelectValue,
+} from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 const CategoryFilter = () => {
   const { categories, selectedCategory, handleCategoryChange } =
     useContext(FilterContext)
 
   return (
-    <div>
-      <label htmlFor="category">Category: </label>
-      <select
-        id="category"
-        value={selectedCategory}
-        onChange={handleCategoryChange}
+    <>
+      <div className="my-2">
+        <Label htmlFor="category">Kategorije:</Label>
+      </div>
+      <Select
+        value={selectedCategory || "all"}
+        onValueChange={(value) =>
+          handleCategoryChange({
+            /* if we select "all"(All Categories) we turn it to empty 
+            string which is a default state that shows all items */
+            target: { value: value === "all" ? "" : value },
+          })
+        }
       >
-        <option value="">All Categories</option>
-        {categories.map((category) => (
-          <option key={category.slug} value={category.slug}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-    </div>
+        <SelectTrigger id="category">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Categories</SelectItem>
+
+          {categories &&
+            categories.map((category) => (
+              <SelectItem key={category.slug} value={category.slug}>
+                {category.name}
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
+    </>
   )
 }
 

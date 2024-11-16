@@ -18,7 +18,6 @@ Link:
 6. `npm run preview` to locally preview the production build
 
 7. `npm run test` to run vitest
-8. `npm run coverage` to generate coverage report
 
 ## What does it include?
 

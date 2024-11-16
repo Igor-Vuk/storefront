@@ -6,45 +6,42 @@ import SearchBar from "../regularComponents/Home/SearchBar/SearchBar"
 
 import {
   Sidebar,
-  SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarHeader,
 } from "@/components/ui/sidebar"
 
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>KING ICT</SidebarGroupLabel>
-          <SidebarGroupContent className="space-y-4">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <CategoryFilter />
-              </SidebarMenuItem>
+      <SidebarHeader className="text-lg font-bold">KING ICT</SidebarHeader>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem className="my-2">
+              <SearchBar />
+            </SidebarMenuItem>
 
-              <SidebarMenuItem>
-                <PriceRangeFilter />
-              </SidebarMenuItem>
+            <SidebarMenuItem className="my-2">
+              <CategoryFilter />
+            </SidebarMenuItem>
 
-              <SidebarMenuItem>
-                <SortControls />
-              </SidebarMenuItem>
+            <SidebarMenuItem className="my-2">
+              <PriceRangeFilter />
+            </SidebarMenuItem>
 
-              <SidebarMenuItem>
-                <OrderControls />
-              </SidebarMenuItem>
+            <SidebarMenuItem className="my-2">
+              <SortControls />
+            </SidebarMenuItem>
 
-              <SidebarMenuItem>
-                <SearchBar />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+            <SidebarMenuItem className="my-2">
+              <OrderControls />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
     </Sidebar>
   )
 }
