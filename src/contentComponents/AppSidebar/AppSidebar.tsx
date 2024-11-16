@@ -17,7 +17,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="text-lg font-bold">KING ICT</SidebarHeader>
-      <SidebarGroup>
+      <SidebarGroup className="max-h-screen overflow-y-auto">
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem className="my-2">

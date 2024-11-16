@@ -31,7 +31,7 @@ const CategoryFilter = () => {
         <SelectTrigger id="category">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-36 overflow-y-auto md:max-h-60">
           <SelectItem value="all">All Categories</SelectItem>
 
           {categories &&

@@ -11,7 +11,7 @@ const Pagination = ({
         disabled={currentPage === 1}
         className="mr-2"
       >
-        Previous Page
+        Prethodna stranica
       </button>
       <span>
         <b>{currentPage}</b> of <b>{totalPages}</b>
@@ -21,7 +21,7 @@ const Pagination = ({
         disabled={currentPage === totalPages}
         className="ml-2"
       >
-        Next Page
+        Sljedeća stranica
       </button>
     </div>
   )
