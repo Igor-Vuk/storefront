@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom"
+import { NavLink, Outlet, useLocation } from "react-router-dom"
 import {
   Menubar,
   MenubarContent,
@@ -26,14 +26,18 @@ import { FilterProvider } from "../../context/FilterContext"
 import { AppSidebar } from "../AppSidebar/AppSidebar"
 
 const Layout = () => {
+  const location = useLocation()
+
+  const isCartPage = location.pathname === "/kosarica"
+
   return (
     <FilterProvider>
       <SidebarProvider>
-        <AppSidebar />
+        {!isCartPage && <AppSidebar />}
         <SidebarInset>
           <Menubar className="flex h-auto items-center justify-between rounded-none border-0 border-b border-solid p-0">
             <div className="flex items-center">
-              <SidebarTrigger />
+              {!isCartPage && <SidebarTrigger />} {/* Hide SidebarTrigger */}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -61,7 +65,7 @@ const Layout = () => {
               </MenubarMenu>
 
               <MenubarMenu>
-                <NavLink to="košarica">
+                <NavLink to="kosarica">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

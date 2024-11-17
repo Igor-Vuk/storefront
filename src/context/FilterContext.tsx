@@ -15,6 +15,12 @@ export const FilterProvider = ({ children }) => {
   const [sortField, setSortField] = useState("title")
   const [sortOrder, setSortOrder] = useState("asc")
   const [isLoading, setIsLoading] = useState(false)
+  const [cart, setCart] = useState({})
+
+  useEffect(() => {
+    const storedCart = JSON.parse(sessionStorage.getItem("cart")) || {}
+    setCart(storedCart)
+  }, [])
 
   // Fetch categories on mount
   useEffect(() => {
@@ -81,6 +87,34 @@ export const FilterProvider = ({ children }) => {
     setSearchTerm(e.target.value)
   }
 
+  const handleAddToCart = (product, change = 1) => {
+    let updatedCart
+    setCart((prevCart) => {
+      updatedCart = { ...prevCart }
+
+      if (updatedCart[product.id]) {
+        // Update the quantity
+        updatedCart[product.id].quantity += change
+
+        // Remove the product if the quantity is zero or less
+        if (updatedCart[product.id].quantity <= 0) {
+          delete updatedCart[product.id]
+        }
+      } else if (change > 0) {
+        // Add a new product to the cart
+        updatedCart[product.id] = {
+          ...product,
+          quantity: 1,
+        }
+      }
+
+      return updatedCart
+    })
+
+    // Update sessionStorage with the new cart
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart))
+  }
+
   return (
     <FilterContext.Provider
       value={{
@@ -93,12 +127,14 @@ export const FilterProvider = ({ children }) => {
         sortField,
         sortOrder,
         isLoading,
+        cart,
         handleCategoryChange,
         handlePriceRangeChange,
         handleSortFieldChange,
         handleSortOrderChange,
         handleSearchChange,
         setDebouncedSearchTerm,
+        handleAddToCart,
       }}
     >
       {children}

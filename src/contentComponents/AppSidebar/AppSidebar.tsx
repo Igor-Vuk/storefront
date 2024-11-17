@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom"
+
 import CategoryFilter from "../regularComponents/Home/CategoryFilter/CategoryFilter"
 import PriceRangeFilter from "../regularComponents/Home/PriceRangeFilter/PriceRangeFilter"
 import SortControls from "../regularComponents/Home/SortControls/SortControls"
@@ -16,7 +18,12 @@ import {
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarHeader className="text-lg font-bold">KING ICT</SidebarHeader>
+      <SidebarHeader className="text-lg font-bold">
+        <span>
+          <NavLink to="/">KING ICT</NavLink>
+        </span>
+      </SidebarHeader>
+
       <SidebarGroup className="max-h-screen overflow-y-auto">
         <SidebarGroupContent>
           <SidebarMenu>

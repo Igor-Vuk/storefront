@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { FilterContext } from "../../../../context/FilterContext"
 import { truncateText } from "../../../../helpers/truncateText.ts"
 
 import {
@@ -32,6 +33,8 @@ const ProductList = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  const { cart, handleAddToCart } = useContext(FilterContext)
+
   const handleCardClick = (product) => {
     setSelectedProduct(product)
     setIsDialogOpen(true)
@@ -45,10 +48,7 @@ const ProductList = ({ products }) => {
             key={product.id}
             className="mb-6 flex w-full px-2 sm:w-1/2 md:w-1/3 lg:w-1/4"
           >
-            <Card
-              className="flex h-full cursor-pointer flex-col rounded-lg shadow-md md:hover:shadow-2xl md:hover:scale-95 transition-transform duration-300 bg-white"
-              onClick={() => handleCardClick(product)}
-            >
+            <Card className="flex h-full  flex-col rounded-lg shadow-md md:hover:shadow-2xl md:hover:scale-95 transition-transform duration-300 bg-white">
               <CardHeader className="border-b border-gray-200 p-4">
                 <CardTitle className="text-lg font-semibold text-gray-800">
                   {product.title}
@@ -71,16 +71,23 @@ const ProductList = ({ products }) => {
                   {truncateText(product.description, 100)}
                 </p>
               </CardContent>
-              <CardFooter className="border-t border-gray-200 p-4 flex justify-end">
+              <CardFooter className="border-t border-gray-200 p-4 flex justify-between items-center">
                 <Button
                   className="rounded bg-green-600 px-4 py-2 text-white transition-colors duration-200 md:hover:bg-green-700 focus:outline-none focus:bg-green-600 active:bg-green-700"
-                  onClick={(e) => {
-                    e.stopPropagation() // Prevent triggering the card's click handler
-                    handleAddToCart(product) // Call the fake function
-                  }}
+                  onClick={() => handleCardClick(product)}
                 >
-                  Dodaj
+                  Detalji
                 </Button>
+
+                {/* If this item is in our Cart, show how many we have them */}
+                {cart[product.id] && (
+                  <div className="flex items-center space-x-2">
+                    <span className="inline-block rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
+                      {cart[product.id].quantity}
+                    </span>
+                    <span className="text-sm text-gray-600">u košarici</span>
+                  </div>
+                )}
               </CardFooter>
             </Card>
           </li>
@@ -88,7 +95,6 @@ const ProductList = ({ products }) => {
       </ul>
 
       {/* Dialog for Product Details */}
-
       {selectedProduct && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto rounded-lg shadow-lg p-6 bg-white border border-gray-200">
@@ -112,12 +118,11 @@ const ProductList = ({ products }) => {
                           <img
                             src={image}
                             alt={`${selectedProduct.title} ${index + 1}`}
-                            className="h-auto w-full rounded-lg object-contain shadow-md"
+                            className="h-auto w-full max-w-screen-sm sm:max-w-screen-md max-h-[300px] sm:max-h-[500px] rounded-lg object-contain shadow-md"
                           />
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    {/* Navigation Buttons positioned below the images */}
                     <div className="mt-4 flex justify-center space-x-4">
                       <CarouselPrevious className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 transition-colors">
                         Prev
@@ -127,15 +132,12 @@ const ProductList = ({ products }) => {
                       </CarouselNext>
                     </div>
                   </Carousel>
-                ) : selectedProduct.images &&
-                  selectedProduct.images.length === 1 ? (
+                ) : (
                   <img
                     src={selectedProduct.thumbnail}
                     alt={selectedProduct.title}
                     className="h-auto w-full rounded-lg object-contain shadow-md"
                   />
-                ) : (
-                  <div className="text-gray-500">No images available</div>
                 )}
               </div>
 
@@ -146,37 +148,43 @@ const ProductList = ({ products }) => {
                 </p>
                 <ul className="mb-4 list-inside list-disc text-gray-700">
                   <li className="py-2">
-                    <b>Category:</b> {selectedProduct.category}
+                    <b>Kategorija:</b> {selectedProduct.category}
                   </li>
                   <li className="py-2">
                     <b>Brand:</b> {selectedProduct.brand}
                   </li>
                   <li className="py-2">
-                    <b>Stock:</b> {selectedProduct.stock}
+                    <b>Količina:</b> {selectedProduct.stock}
                   </li>
                   <li className="py-2">
-                    <b>SKU:</b> {selectedProduct.sku}
+                    <b>Ocjena:</b> {selectedProduct.rating}
                   </li>
                   <li className="py-2">
-                    <b>Rating:</b> {selectedProduct.rating}
+                    <b>Garancija:</b> {selectedProduct.warrantyInformation}
                   </li>
                   <li className="py-2">
-                    <b>Warranty:</b> {selectedProduct.warrantyInformation}
-                  </li>
-                  <li className="py-2">
-                    <b>Availability:</b> {selectedProduct.availabilityStatus}
+                    <b>Dostupnost:</b> {selectedProduct.availabilityStatus}
                   </li>
                 </ul>
-                <Button
-                  className="rounded bg-green-600 px-4 py-2 text-white transition-colors duration-200 md:hover:bg-green-700 focus:outline-none focus-visible:ring-0 focus:bg-green-600 active:bg-green-700"
-                  onClick={() => handleAddToCart(selectedProduct)}
-                >
-                  Dodaj u košaricu
-                </Button>
+                <div className="flex items-center space-x-4">
+                  <Button
+                    className="rounded bg-green-600 px-4 py-2 text-white transition-colors duration-200 md:hover:bg-green-700 focus:outline-none focus-visible:ring-0 focus:bg-green-600 active:bg-green-700"
+                    onClick={() => handleAddToCart(selectedProduct)}
+                  >
+                    Dodaj u košaricu
+                  </Button>
+                  {cart[selectedProduct?.id] && (
+                    <div className="space-x-2">
+                      <span className="inline-block rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
+                        {cart[selectedProduct.id].quantity}
+                      </span>
+                      <span className="text-sm text-gray-600">u košarici</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Reviews */}
             {selectedProduct.reviews && selectedProduct.reviews.length > 0 && (
               <div className="mt-6">
                 <h3 className="mb-4 text-xl font-semibold text-gray-800">
@@ -209,10 +217,7 @@ const ProductList = ({ products }) => {
 
             <DialogFooter className="mt-6 border-t border-gray-200 pt-4">
               <DialogClose asChild>
-                <Button
-                  variant="secondary"
-                  className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:shadow-md focus:outline-none focus:bg-gray-100 active:bg-gray-200"
-                >
+                <Button className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Zatvori
                 </Button>
               </DialogClose>
