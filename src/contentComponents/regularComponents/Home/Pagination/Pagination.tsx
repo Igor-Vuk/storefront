@@ -5,7 +5,7 @@ const Pagination = ({
   handleNextPage,
 }) => {
   return (
-    <div className="px-2 text-lg">
+    <div className="px-2 text-base">
       <button
         onClick={handlePreviousPage}
         disabled={currentPage === 1}
