@@ -30,15 +30,14 @@ import {
 import { Button } from "@/components/ui/button"
 
 const ProductList = ({ products }) => {
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  const { cart, handleAddToCart } = useContext(FilterContext)
-
-  const handleCardClick = (product) => {
-    setSelectedProduct(product)
-    setIsDialogOpen(true)
-  }
+  const {
+    cart,
+    handleAddToCart,
+    handleCardClick,
+    selectedProduct,
+    isDialogOpen,
+    handleDialogOpen,
+  } = useContext(FilterContext)
 
   return (
     <>
@@ -96,7 +95,10 @@ const ProductList = ({ products }) => {
 
       {/* Dialog for Product Details */}
       {selectedProduct && (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={() => handleDialogOpen(false)}
+        >
           <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto rounded-lg shadow-lg p-6 bg-white border border-gray-200">
             <DialogHeader className="mb-4 border-b border-gray-200 pb-4">
               <DialogTitle className="text-2xl font-bold text-gray-800">

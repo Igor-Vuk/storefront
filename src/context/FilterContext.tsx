@@ -16,6 +16,8 @@ export const FilterProvider = ({ children }) => {
   const [sortOrder, setSortOrder] = useState("asc")
   const [isLoading, setIsLoading] = useState(false)
   const [cart, setCart] = useState({})
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     const storedCart = JSON.parse(sessionStorage.getItem("cart")) || {}
@@ -87,32 +89,36 @@ export const FilterProvider = ({ children }) => {
     setSearchTerm(e.target.value)
   }
 
+  const handleCardClick = (product) => {
+    setSelectedProduct(product)
+    setIsDialogOpen(true)
+  }
+
+  const handleDialogOpen = (value) => {
+    setIsDialogOpen(value)
+  }
+
   const handleAddToCart = (product, change = 1) => {
-    let updatedCart
     setCart((prevCart) => {
-      updatedCart = { ...prevCart }
+      // Deep copy the cart to avoid mutating the original state
+      const updatedCart = JSON.parse(JSON.stringify(prevCart))
 
       if (updatedCart[product.id]) {
-        // Update the quantity
-        updatedCart[product.id].quantity += change
+        const newQuantity = updatedCart[product.id].quantity + change
 
-        // Remove the product if the quantity is zero or less
-        if (updatedCart[product.id].quantity <= 0) {
+        if (newQuantity > 0) {
+          updatedCart[product.id].quantity = newQuantity
+        } else {
           delete updatedCart[product.id]
         }
       } else if (change > 0) {
-        // Add a new product to the cart
-        updatedCart[product.id] = {
-          ...product,
-          quantity: 1,
-        }
+        updatedCart[product.id] = { ...product, quantity: 1 }
       }
+
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart))
 
       return updatedCart
     })
-
-    // Update sessionStorage with the new cart
-    sessionStorage.setItem("cart", JSON.stringify(updatedCart))
   }
 
   return (
@@ -122,12 +128,14 @@ export const FilterProvider = ({ children }) => {
         categories,
         selectedCategory,
         selectedPriceRange,
+        selectedProduct,
         searchTerm,
         debouncedSearchTerm,
         sortField,
         sortOrder,
         isLoading,
         cart,
+        isDialogOpen,
         handleCategoryChange,
         handlePriceRangeChange,
         handleSortFieldChange,
@@ -135,6 +143,8 @@ export const FilterProvider = ({ children }) => {
         handleSearchChange,
         setDebouncedSearchTerm,
         handleAddToCart,
+        handleCardClick,
+        handleDialogOpen,
       }}
     >
       {children}
