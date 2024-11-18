@@ -99,6 +99,7 @@ export const FilterProvider = ({ children }) => {
   }
 
   const handleAddToCart = (product, change = 1) => {
+    /* Add or remove items one by one from the cart */
     setCart((prevCart) => {
       // Deep copy the cart to avoid mutating the original state
       const updatedCart = JSON.parse(JSON.stringify(prevCart))
@@ -117,6 +118,16 @@ export const FilterProvider = ({ children }) => {
 
       sessionStorage.setItem("cart", JSON.stringify(updatedCart))
 
+      return updatedCart
+    })
+  }
+
+  const handleRemoveFromCart = (productId) => {
+    /* Remove multiple items at once */
+    setCart((prevCart) => {
+      const updatedCart = { ...prevCart }
+      delete updatedCart[productId] // Remove the product entirely
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart))
       return updatedCart
     })
   }
@@ -143,6 +154,7 @@ export const FilterProvider = ({ children }) => {
         handleSearchChange,
         setDebouncedSearchTerm,
         handleAddToCart,
+        handleRemoveFromCart,
         handleCardClick,
         handleDialogOpen,
       }}

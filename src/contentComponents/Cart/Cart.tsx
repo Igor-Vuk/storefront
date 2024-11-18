@@ -2,9 +2,11 @@ import { useContext } from "react"
 import { NavLink } from "react-router-dom"
 import { FilterContext } from "../../context/FilterContext"
 import { Button } from "@/components/ui/button"
+import { TrashIcon } from "@radix-ui/react-icons"
 
 const Cart = () => {
-  const { cart, handleAddToCart } = useContext(FilterContext)
+  const { cart, handleAddToCart, handleCardClick, handleRemoveFromCart } =
+    useContext(FilterContext)
 
   /* Total price */
   const totalPrice = Object.values(cart).reduce(
@@ -14,7 +16,7 @@ const Cart = () => {
 
   return (
     <div className="p-6 relative">
-      <h1 className="text-2xl font-bold mb-6">Košarica</h1>
+      <h1 className="text-2xl font-bold mb-6 p-2">Košarica</h1>
       {Object.keys(cart).length === 0 ? (
         <p>Nema proizvoda u košarici.</p>
       ) : (
@@ -22,7 +24,10 @@ const Cart = () => {
           <ul className="space-y-4">
             {Object.values(cart).map((item) => (
               <li key={item.id} className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+                <div
+                  className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-100 transition p-2"
+                  onClick={() => handleCardClick(item)}
+                >
                   <img
                     src={item.thumbnail}
                     alt={item.title}
@@ -32,6 +37,17 @@ const Cart = () => {
                     <h2 className="text-lg font-semibold">{item.title}</h2>
                     <p className="text-gray-600">${item.price.toFixed(2)}</p>
                     <p className="text-gray-600">Količina: {item.quantity}</p>
+
+                    <div
+                      className="flex items-center space-x-2 mt-2 text-gray-700 hover:text-red-600 cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveFromCart(item.id)
+                      }}
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                      <span className="text-sm">Obriši</span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex space-x-2">
