@@ -4,6 +4,11 @@ Moguči problemi:
 
 Prilikom otvaranja detalja o proizvodu, učitavanje slika može biti sporo. To je zato što Slike se dolaze sa CDN-a i nepotrebno su velike.
 
+Za logiranje koristite ove podatke
+
+emilys
+emilyspass
+
 Link:
 
 ![alt text](Botinec.png)

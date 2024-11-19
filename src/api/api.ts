@@ -1,11 +1,13 @@
 const BASE_URL = "https://dummyjson.com"
 
 const apiEndpoints = {
+  LOGIN: `${BASE_URL}/auth/login`,
+  REFRESH: `${BASE_URL}/auth/refresh`,
   PRODUCTS: `${BASE_URL}/products`,
   CATEGORIES: `${BASE_URL}/products/categories`,
 }
 
-const { PRODUCTS, CATEGORIES } = apiEndpoints
+const { LOGIN, REFRESH, PRODUCTS, CATEGORIES } = apiEndpoints
 
 const fetchCategories = async () => {
   try {
@@ -17,7 +19,7 @@ const fetchCategories = async () => {
       return
     }
 
-    return data // Assuming data is an array of category names
+    return data
   } catch (error) {
     console.error("Fetch category error", error)
     return
@@ -26,7 +28,6 @@ const fetchCategories = async () => {
 
 const fetchProducts = async (selectedCategory, sortField, sortOrder) => {
   try {
-    /* If we didn't select category, fetch all products */
     const baseProductUrl = selectedCategory
       ? `${PRODUCTS}/category/${selectedCategory}`
       : PRODUCTS
@@ -48,4 +49,46 @@ const fetchProducts = async (selectedCategory, sortField, sortOrder) => {
   }
 }
 
-export { fetchCategories, fetchProducts }
+const loginUser = async (username, password) => {
+  try {
+    const res = await fetch(LOGIN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.message || "Login failed")
+    }
+
+    return data
+  } catch (error) {
+    console.error("Login error:", error)
+    throw error
+  }
+}
+
+const refreshToken = async (refreshToken) => {
+  try {
+    const res = await fetch(REFRESH, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.message || "Token refresh failed")
+    }
+
+    return data
+  } catch (error) {
+    console.error("Token refresh error:", error)
+    throw error
+  }
+}
+
+export { fetchCategories, fetchProducts, loginUser, refreshToken }

@@ -1,15 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FilterContext } from "../../../context/FilterContext"
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarTrigger,
-} from "@/components/ui/menubar"
+import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"
 import {
   Tooltip,
   TooltipContent,
@@ -22,43 +14,61 @@ import { AvatarIcon, RocketIcon } from "@radix-ui/react-icons"
 
 const Layout = () => {
   const location = useLocation()
-  const { cart } = useContext(FilterContext)
+  const { cart, isLoggedIn } = useContext(FilterContext)
+
+  const [userImage, setUserImage] = useState(null)
 
   const isCartPage = location.pathname === "/kosarica"
+  const isAuthPage = location.pathname === "/auth"
 
   const totalItems = Object.values(cart).reduce(
     (total, item) => total + item.quantity,
     0,
   )
 
+  // Load user image from sessionStorage if logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      const savedUserInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+      if (savedUserInfo?.image) {
+        setUserImage(savedUserInfo.image) // Set user image
+      }
+    } else {
+      setUserImage(null) // Reset to null when logged out
+    }
+  }, [isLoggedIn])
+
   return (
     <Menubar className="flex h-auto items-center justify-between rounded-none border-0 border-b border-solid p-0">
       <div className="flex items-center">
-        {!isCartPage && <SidebarTrigger />} {/* Hide SidebarTrigger */}
+        {/* Hide SidebarTrigger */}
+        {!(isCartPage || isAuthPage) && <SidebarTrigger />}
       </div>
 
       <div className="flex items-center space-x-4">
         <MenubarMenu>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <MenubarTrigger className="hover:cursor-pointer">
-                  <AvatarIcon className="size-6" />
-                </MenubarTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Moj Profil</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-          </MenubarContent>
+          <NavLink to="auth">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <MenubarTrigger className="hover:cursor-pointer">
+                    {isLoggedIn && userImage ? (
+                      <img
+                        src={userImage}
+                        alt="User Avatar"
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <AvatarIcon className="size-6" />
+                    )}
+                  </MenubarTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Moj Profil</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </NavLink>
         </MenubarMenu>
 
         <MenubarMenu>

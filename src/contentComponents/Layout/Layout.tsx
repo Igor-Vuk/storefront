@@ -10,11 +10,12 @@ const Layout = () => {
   const location = useLocation()
 
   const isCartPage = location.pathname === "/kosarica"
+  const isAuthPage = location.pathname === "/auth"
 
   return (
     <FilterProvider>
       <SidebarProvider>
-        {!isCartPage && <AppSidebar />}
+        {!(isCartPage || isAuthPage) && <AppSidebar />}
         <SidebarInset>
           <MenuBar />
 

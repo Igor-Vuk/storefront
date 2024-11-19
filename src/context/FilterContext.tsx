@@ -18,6 +18,7 @@ export const FilterProvider = ({ children }) => {
   const [cart, setCart] = useState({})
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     const storedCart = JSON.parse(sessionStorage.getItem("cart")) || {}
@@ -132,6 +133,10 @@ export const FilterProvider = ({ children }) => {
     })
   }
 
+  const handleLoggedIn = (value) => {
+    setIsLoggedIn(value)
+  }
+
   return (
     <FilterContext.Provider
       value={{
@@ -147,6 +152,7 @@ export const FilterProvider = ({ children }) => {
         isLoading,
         cart,
         isDialogOpen,
+        isLoggedIn,
         handleCategoryChange,
         handlePriceRangeChange,
         handleSortFieldChange,
@@ -157,6 +163,7 @@ export const FilterProvider = ({ children }) => {
         handleRemoveFromCart,
         handleCardClick,
         handleDialogOpen,
+        handleLoggedIn,
       }}
     >
       {children}
