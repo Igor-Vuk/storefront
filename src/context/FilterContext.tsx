@@ -1,27 +1,35 @@
 import { createContext, useState, useEffect } from "react"
 import { fetchCategories, fetchProducts } from "../api/api"
+import {
+  FilterProviderProps,
+  Product,
+  Category,
+  CartItem,
+  FilterContextType,
+  InputChangeEvent,
+} from "./FilterContext.types"
 
-export const FilterContext = createContext(undefined)
+export const FilterContext = createContext<FilterContextType | undefined>(
+  undefined,
+)
 
-// Create the provider component
-export const FilterProvider = ({ children }) => {
-  // State variables
-  const [allProducts, setAllProducts] = useState([])
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedPriceRange, setSelectedPriceRange] = useState("")
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
-  const [sortField, setSortField] = useState("title")
-  const [sortOrder, setSortOrder] = useState("asc")
-  const [isLoading, setIsLoading] = useState(false)
-  const [cart, setCart] = useState({})
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+export const FilterProvider = ({ children }: FilterProviderProps) => {
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>("")
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("")
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("")
+  const [sortField, setSortField] = useState<"title" | "price">("title")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [cart, setCart] = useState<Record<number, CartItem>>({})
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 
   useEffect(() => {
-    const storedCart = JSON.parse(sessionStorage.getItem("cart")) || {}
+    const storedCart = JSON.parse(sessionStorage.getItem("cart") || "{}")
     setCart(storedCart)
   }, [])
 
@@ -53,7 +61,7 @@ export const FilterProvider = ({ children }) => {
           sortOrder,
         )
 
-        if (products === null) {
+        if (!products) {
           setIsLoading(false)
           return
         }
@@ -70,36 +78,36 @@ export const FilterProvider = ({ children }) => {
   }, [sortField, sortOrder, selectedCategory])
 
   // Handlers
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value)
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value)
   }
 
-  const handlePriceRangeChange = (e) => {
-    setSelectedPriceRange(e.target.value)
+  const handlePriceRangeChange = (value: string) => {
+    setSelectedPriceRange(value)
   }
 
-  const handleSortFieldChange = (e) => {
-    setSortField(e.target.value)
+  const handleSortFieldChange = (value: "title" | "price") => {
+    setSortField(value)
   }
 
-  const handleSortOrderChange = (e) => {
-    setSortOrder(e.target.value)
+  const handleSortOrderChange = (value: "asc" | "desc") => {
+    setSortOrder(value)
   }
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: InputChangeEvent) => {
     setSearchTerm(e.target.value)
   }
 
-  const handleCardClick = (product) => {
+  const handleCardClick = (product: Product) => {
     setSelectedProduct(product)
     setIsDialogOpen(true)
   }
 
-  const handleDialogOpen = (value) => {
+  const handleDialogOpen = (value: boolean) => {
     setIsDialogOpen(value)
   }
 
-  const handleAddToCart = (product, change = 1) => {
+  const handleAddToCart = (product: Product, change = 1) => {
     /* Add or remove items one by one from the cart */
     setCart((prevCart) => {
       // Deep copy the cart to avoid mutating the original state
@@ -123,17 +131,17 @@ export const FilterProvider = ({ children }) => {
     })
   }
 
-  const handleRemoveFromCart = (productId) => {
-    /* Remove multiple items at once */
+  const handleRemoveFromCart = (productId: number) => {
+    // Remove multiple items at once
     setCart((prevCart) => {
       const updatedCart = { ...prevCart }
-      delete updatedCart[productId] // Remove the product entirely
+      delete updatedCart[productId]
       sessionStorage.setItem("cart", JSON.stringify(updatedCart))
       return updatedCart
     })
   }
 
-  const handleLoggedIn = (value) => {
+  const handleLoggedIn = (value: boolean) => {
     setIsLoggedIn(value)
   }
 

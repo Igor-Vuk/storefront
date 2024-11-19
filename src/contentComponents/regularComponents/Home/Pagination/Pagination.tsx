@@ -1,4 +1,7 @@
-const Pagination = ({
+import React from "react"
+import { PaginationProps } from "../../../../context/FilterContext.types.ts"
+
+const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   handlePreviousPage,

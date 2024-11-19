@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
 import {
   Select,
@@ -8,8 +8,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { PriceRangeOption } from "../../../../context/FilterContext.types"
 
-const priceRanges = [
+const priceRanges: PriceRangeOption[] = [
   { label: "All Prices", value: "all" },
   { label: "Up to $10", value: "0-10" },
   { label: "$10 - $50", value: "10-50" },
@@ -17,9 +18,9 @@ const priceRanges = [
   { label: "Over $100", value: "100+" },
 ]
 
-const PriceRangeFilter = () => {
+const PriceRangeFilter: React.FC = () => {
   const { selectedPriceRange, handlePriceRangeChange } =
-    useContext(FilterContext)
+    useContext(FilterContext)!
 
   return (
     <>
@@ -28,14 +29,13 @@ const PriceRangeFilter = () => {
       </div>
       <Select
         value={selectedPriceRange || "all"}
-        onValueChange={(value) =>
-          handlePriceRangeChange({
-            target: { value: value === "all" ? "" : value },
-          })
-        }
+        onValueChange={(value) => {
+          const valueSelected = value === "all" ? "" : value
+          handlePriceRangeChange(valueSelected)
+        }}
       >
         <SelectTrigger id="priceRange">
-          <SelectValue />
+          <SelectValue placeholder="Izaberi raspon cijena" />
         </SelectTrigger>
         <SelectContent>
           {priceRanges.map((range) => (

@@ -1,10 +1,11 @@
-import { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import { FilterContext } from "../../../context/FilterContext"
+import { Product } from "../../../context/FilterContext.types"
 
 import ProductList from "./ProductList/ProductList"
 import Pagination from "./Pagination/Pagination"
 
-const Home = () => {
+const Home: React.FC = () => {
   const {
     allProducts,
     selectedPriceRange,
@@ -15,11 +16,11 @@ const Home = () => {
     sortField,
     sortOrder,
     isLoading,
-  } = useContext(FilterContext)
+  } = useContext(FilterContext)!
 
-  const [products, setProducts] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
+  const [products, setProducts] = useState<Product[]>([])
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(0)
   const itemsPerPage = 20
 
   useEffect(() => {
@@ -58,10 +59,9 @@ const Home = () => {
         if (sortField === "title") {
           const titleA = a.title.toLowerCase()
           const titleB = b.title.toLowerCase()
-
-          if (titleA < titleB) return sortOrder === "asc" ? -1 : 1
-          if (titleA > titleB) return sortOrder === "asc" ? 1 : -1
-          return 0
+          return sortOrder === "asc"
+            ? titleA.localeCompare(titleB)
+            : titleB.localeCompare(titleA)
         } else if (sortField === "price") {
           return sortOrder === "asc" ? a.price - b.price : b.price - a.price
         }
@@ -70,7 +70,6 @@ const Home = () => {
 
       /* Update total pages based on filteredProducts */
       setTotalPages(Math.ceil(filteredProducts.length / itemsPerPage))
-
       /* We set max of 20 items per page. Here we slice 20 items from filteredProducts
       to show them on current page */
       const indexOfLastItem = currentPage * itemsPerPage
@@ -110,7 +109,6 @@ const Home = () => {
     sortOrder,
   ])
 
-  /* Pagination handlers */
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1)
@@ -128,7 +126,7 @@ const Home = () => {
       {isLoading ? (
         <p className="text-center">Učitavanje...</p>
       ) : products.length === 0 ? (
-        <p className="text-center">Trenuto nema proizvoda!</p>
+        <p className="text-center">Trenutno nema proizvoda!</p>
       ) : (
         <>
           <ProductList products={products} />

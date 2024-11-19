@@ -1,3 +1,4 @@
+import React from "react"
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -20,6 +21,8 @@ const router = createBrowserRouter(
   ),
 )
 
-export default function App() {
+const App: React.FC = () => {
   return <RouterProvider router={router} />
 }
+
+export default App

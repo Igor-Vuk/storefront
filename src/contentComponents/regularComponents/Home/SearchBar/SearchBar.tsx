@@ -1,9 +1,10 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
 import { Input } from "@/components/ui/input"
 
-const SearchBar = () => {
-  const { searchTerm, handleSearchChange } = useContext(FilterContext)
+const SearchBar: React.FC = () => {
+  const { searchTerm, handleSearchChange } = useContext(FilterContext) || {}
+
   return (
     <Input
       type="text"

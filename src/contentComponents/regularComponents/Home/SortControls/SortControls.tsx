@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
 import {
   Select,
@@ -8,14 +8,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { SortOption } from "../../../../context/FilterContext.types.ts"
 
-const sortOptions = [
+const sortOptions: SortOption[] = [
   { label: "Name", value: "title" },
   { label: "Price", value: "price" },
 ]
 
-const SortControls = () => {
-  const { sortField, handleSortFieldChange } = useContext(FilterContext)
+const SortControls: React.FC = () => {
+  const { sortField, handleSortFieldChange } = useContext(FilterContext)!
 
   return (
     <>
@@ -24,7 +25,9 @@ const SortControls = () => {
       </div>
       <Select
         value={sortField}
-        onValueChange={(value) => handleSortFieldChange({ target: { value } })}
+        onValueChange={(value) =>
+          handleSortFieldChange(value as "title" | "price")
+        }
       >
         <SelectTrigger id="sortField">
           <SelectValue />

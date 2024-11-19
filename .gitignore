@@ -4,6 +4,3 @@ public/.DS_Store/
 node_modules/
 dist/
 stats.html
-.env
-.env*.local
-.env*.production

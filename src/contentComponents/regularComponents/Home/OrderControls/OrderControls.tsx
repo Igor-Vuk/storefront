@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { FilterContext } from "../../../../context/FilterContext"
 import {
   Select,
@@ -8,14 +8,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { OrderOption } from "../../../../context/FilterContext.types"
 
-const orderOptions = [
+const orderOptions: OrderOption[] = [
   { label: "Ascending", value: "asc" },
   { label: "Descending", value: "desc" },
 ]
 
-const OrderControls = () => {
-  const { sortOrder, handleSortOrderChange } = useContext(FilterContext)
+const OrderControls: React.FC = () => {
+  const { sortOrder, handleSortOrderChange } = useContext(FilterContext)!
 
   return (
     <>
@@ -24,10 +25,12 @@ const OrderControls = () => {
       </div>
       <Select
         value={sortOrder}
-        onValueChange={(value) => handleSortOrderChange({ target: { value } })}
+        onValueChange={(value) =>
+          handleSortOrderChange(value as "asc" | "desc")
+        }
       >
         <SelectTrigger id="sortOrder">
-          <SelectValue />
+          <SelectValue placeholder="Izaberi poredak" />
         </SelectTrigger>
         <SelectContent>
           {orderOptions.map((option) => (
