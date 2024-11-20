@@ -22,7 +22,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       {products.map((product) => (
         <li
           key={product.id}
-          className="mb-6 flex w-full px-2 sm:w-1/2 md:w-1/3 lg:w-1/4"
+          className="mb-6 w-full px-2 sm:w-1/2 md:w-1/3 lg:w-1/4"
         >
           <Card className="flex h-full flex-col rounded-lg bg-white shadow-md transition-transform duration-300 md:hover:scale-95 md:hover:shadow-2xl">
             <CardHeader className="border-b border-gray-200 p-4">

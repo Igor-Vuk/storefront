@@ -80,6 +80,8 @@ export interface OrderOption {
   value: "asc" | "desc"
 }
 
+export type OmittedUserInfo = Omit<UserInfo, "accessToken" | "refreshToken">
+
 export interface FilterContextType {
   allProducts: Product[]
   categories: Category[]
@@ -94,6 +96,7 @@ export interface FilterContextType {
   cart: Record<string, CartItem>
   isDialogOpen: boolean
   isLoggedIn: boolean
+  userInfo: OmittedUserInfo | null
   handleCategoryChange: (value: string) => void
   handlePriceRangeChange: (value: string) => void
   handleSortFieldChange: (value: "title" | "price") => void
@@ -105,4 +108,5 @@ export interface FilterContextType {
   handleDialogOpen: (value: boolean) => void
   handleLoggedIn: (value: boolean) => void
   setDebouncedSearchTerm: Dispatch<SetStateAction<string>>
+  setUserInfo: Dispatch<SetStateAction<OmittedUserInfo | null>>
 }

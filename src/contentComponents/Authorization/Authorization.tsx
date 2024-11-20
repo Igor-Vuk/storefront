@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState } from "react"
 import { NavLink } from "react-router-dom"
 import { FilterContext } from "../../context/FilterContext"
 import { loginUser, refreshToken } from "../../api/api"
@@ -11,25 +11,11 @@ password: emilyspass
 */
 
 const Authorization: React.FC = () => {
-  const { isLoggedIn, handleLoggedIn } = useContext(FilterContext)!
+  const { isLoggedIn, handleLoggedIn, userInfo, setUserInfo } =
+    useContext(FilterContext)!
 
-  const [userInfo, setUserInfo] = useState<Omit<
-    UserInfo,
-    "accessToken" | "refreshToken"
-  > | null>(null)
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-
-  // Check sessionStorage for user info on mount
-  useEffect(() => {
-    const savedUserInfo = sessionStorage.getItem("userInfo")
-    if (savedUserInfo) {
-      const parsedUserInfo: UserInfo = JSON.parse(savedUserInfo)
-      const { accessToken, refreshToken, ...filteredUserInfo } = parsedUserInfo // Exclude tokens for security
-      setUserInfo(filteredUserInfo)
-      handleLoggedIn(true)
-    }
-  }, [])
 
   const handleLogin = async () => {
     try {

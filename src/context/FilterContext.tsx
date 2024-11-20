@@ -7,6 +7,7 @@ import {
   CartItem,
   FilterContextType,
   InputChangeEvent,
+  OmittedUserInfo,
 } from "./FilterContext.types"
 
 export const FilterContext = createContext<FilterContextType | undefined>(
@@ -27,6 +28,7 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const [userInfo, setUserInfo] = useState<OmittedUserInfo | null>(null)
 
   useEffect(() => {
     const storedCart = JSON.parse(sessionStorage.getItem("cart") || "{}")
@@ -161,6 +163,7 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         cart,
         isDialogOpen,
         isLoggedIn,
+        userInfo,
         handleCategoryChange,
         handlePriceRangeChange,
         handleSortFieldChange,
@@ -172,6 +175,7 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         handleCardClick,
         handleDialogOpen,
         handleLoggedIn,
+        setUserInfo,
       }}
     >
       {children}

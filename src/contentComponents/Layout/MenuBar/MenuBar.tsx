@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { FilterContext } from "../../../context/FilterContext"
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"
@@ -15,12 +15,8 @@ import { CartItem, UserInfo } from "../../../context/FilterContext.types"
 
 const MenuBar: React.FC = () => {
   const location = useLocation()
-  const { cart, isLoggedIn } = useContext(FilterContext)!
-
-  const [userInfo, setUserInfo] = useState<Omit<
-    UserInfo,
-    "accessToken" | "refreshToken"
-  > | null>(null)
+  const { cart, isLoggedIn, handleLoggedIn, userInfo, setUserInfo } =
+    useContext(FilterContext)!
 
   const isCartPage = location.pathname === "/kosarica"
   const isAuthPage = location.pathname === "/auth"
@@ -32,21 +28,16 @@ const MenuBar: React.FC = () => {
   )
 
   // Load user information from sessionStorage if logged in
-  useEffect(() => {
-    if (isLoggedIn) {
-      const savedUserInfo: UserInfo | null = JSON.parse(
-        sessionStorage.getItem("userInfo") || "null",
-      )
 
-      if (savedUserInfo) {
-        /* Don't save accessToken and refresh token to state */
-        const { accessToken, refreshToken, ...filteredUserInfo } = savedUserInfo
-        setUserInfo(filteredUserInfo)
-      }
-    } else {
-      setUserInfo(null) // Reset to null when logged out
+  useEffect(() => {
+    const savedUserInfo = sessionStorage.getItem("userInfo")
+    if (savedUserInfo) {
+      const parsedUserInfo: UserInfo = JSON.parse(savedUserInfo)
+      const { accessToken, refreshToken, ...filteredUserInfo } = parsedUserInfo // Exclude tokens for security
+      setUserInfo(filteredUserInfo)
+      handleLoggedIn(true)
     }
-  }, [isLoggedIn])
+  }, [])
 
   return (
     <Menubar className="flex h-auto items-center justify-between rounded-none border-0 border-b border-solid p-0">
