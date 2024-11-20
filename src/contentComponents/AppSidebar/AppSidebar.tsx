@@ -20,9 +20,7 @@ const AppSidebar: React.FC = () => {
   return (
     <Sidebar>
       <SidebarHeader className="text-lg font-bold">
-        <span>
-          <NavLink to="/">KING ICT</NavLink>
-        </span>
+        <span>KING ICT</span>
       </SidebarHeader>
 
       <SidebarGroup className="max-h-screen overflow-y-auto">
