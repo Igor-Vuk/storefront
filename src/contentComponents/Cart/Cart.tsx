@@ -1,37 +1,38 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { NavLink } from "react-router-dom"
 import { FilterContext } from "../../context/FilterContext"
 import { Button } from "@/components/ui/button"
 import { TrashIcon } from "@radix-ui/react-icons"
+import { CartItem } from "../../context/FilterContext.types.ts"
 
-const Cart = () => {
+const Cart: React.FC = () => {
   const { cart, handleAddToCart, handleCardClick, handleRemoveFromCart } =
-    useContext(FilterContext)
+    useContext(FilterContext)!
 
   /* Total price */
   const totalPrice = Object.values(cart).reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total: number, item: CartItem) => total + item.price * item.quantity,
     0,
   )
 
   return (
-    <div className="p-6 relative">
-      <h1 className="text-2xl font-bold mb-6 p-2">Košarica</h1>
+    <div className="relative p-6">
+      <h1 className="mb-6 p-2 text-2xl font-bold">Košarica</h1>
       {Object.keys(cart).length === 0 ? (
         <p>Nema proizvoda u košarici.</p>
       ) : (
         <>
           <ul className="space-y-4">
-            {Object.values(cart).map((item) => (
+            {Object.values(cart).map((item: CartItem) => (
               <li key={item.id} className="flex items-center justify-between">
                 <div
-                  className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-100 transition p-2"
+                  className="flex items-center space-x-4 p-2 transition hover:cursor-pointer hover:bg-gray-100"
                   onClick={() => handleCardClick(item)}
                 >
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-16 h-16 object-contain"
+                    className="size-16 object-contain"
                   />
                   <div>
                     <h2 className="text-lg font-semibold">{item.title}</h2>
@@ -39,26 +40,26 @@ const Cart = () => {
                     <p className="text-gray-600">Količina: {item.quantity}</p>
 
                     <div
-                      className="flex items-center space-x-2 mt-2 text-gray-700 hover:text-red-600 cursor-pointer"
+                      className="mt-2 flex cursor-pointer items-center space-x-2 text-gray-700 hover:text-red-600"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleRemoveFromCart(item.id)
                       }}
                     >
-                      <TrashIcon className="w-5 h-5" />
+                      <TrashIcon className="size-5" />
                       <span className="text-sm">Obriši</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex space-x-2">
                   <Button
-                    className="w-8 h-8 rounded bg-red-600 text-white hover:bg-red-700 focus:outline-none active:bg-red-800 flex items-center justify-center"
+                    className="flex size-8 items-center justify-center rounded bg-red-600 text-white hover:bg-red-700 focus:outline-none active:bg-red-800"
                     onClick={() => handleAddToCart(item, -1)}
                   >
                     -
                   </Button>
                   <Button
-                    className="w-8 h-8 rounded bg-green-600 text-white hover:bg-green-700 focus:outline-none active:bg-green-800 flex items-center justify-center"
+                    className="flex size-8 items-center justify-center rounded bg-green-600 text-white hover:bg-green-700 focus:outline-none active:bg-green-800"
                     onClick={() => handleAddToCart(item, 1)}
                   >
                     +

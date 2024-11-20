@@ -1,3 +1,4 @@
+import React from "react"
 import { NavLink } from "react-router-dom"
 
 import CategoryFilter from "../regularComponents/Home/CategoryFilter/CategoryFilter"
@@ -15,7 +16,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 
-export function AppSidebar() {
+const AppSidebar: React.FC = () => {
   return (
     <Sidebar>
       <SidebarHeader className="text-lg font-bold">
@@ -52,3 +53,5 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
+
+export default AppSidebar

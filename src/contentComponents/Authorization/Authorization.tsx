@@ -1,25 +1,31 @@
-import { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { FilterContext } from "../../context/FilterContext"
-import { loginUser, refreshToken } from "../../api/api.ts"
+import { loginUser, refreshToken } from "../../api/api"
+import { UserInfo } from "../../context/FilterContext.types"
 
 /* 
-emilys
-emilyspass 
+use this to test loginUser:
+username: emilys
+password: emilyspass 
 */
 
-const Authorization = () => {
-  const { isLoggedIn, handleLoggedIn } = useContext(FilterContext)
+const Authorization: React.FC = () => {
+  const { isLoggedIn, handleLoggedIn } = useContext(FilterContext)!
 
-  const [userInfo, setUserInfo] = useState(null)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [userInfo, setUserInfo] = useState<Omit<
+    UserInfo,
+    "accessToken" | "refreshToken"
+  > | null>(null)
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
 
   // Check sessionStorage for user info on mount
   useEffect(() => {
-    const savedUserInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+    const savedUserInfo = sessionStorage.getItem("userInfo")
     if (savedUserInfo) {
-      const { accessToken, refreshToken, ...filteredUserInfo } = savedUserInfo // Exclude tokens for security
+      const parsedUserInfo: UserInfo = JSON.parse(savedUserInfo)
+      const { accessToken, refreshToken, ...filteredUserInfo } = parsedUserInfo // Exclude tokens for security
       setUserInfo(filteredUserInfo)
       handleLoggedIn(true)
     }
@@ -27,7 +33,7 @@ const Authorization = () => {
 
   const handleLogin = async () => {
     try {
-      const data = await loginUser(username, password)
+      const data: UserInfo = await loginUser(username, password)
 
       // Save user info and tokens to sessionStorage
       sessionStorage.setItem("userInfo", JSON.stringify(data))
@@ -37,7 +43,8 @@ const Authorization = () => {
       const { accessToken, refreshToken, ...filteredUserInfo } = data
       setUserInfo(filteredUserInfo)
       handleLoggedIn(true)
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       alert(error.message || "Login failed")
     }
   }
@@ -67,16 +74,17 @@ const Authorization = () => {
       sessionStorage.setItem("refreshToken", data.refreshToken)
 
       alert("Token refreshed successfully!")
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       alert(error.message || "Token refresh failed")
     }
   }
 
   return (
-    <div className="flex items-start sm:items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex min-h-screen items-start justify-center bg-gray-100 sm:items-center">
       {!isLoggedIn ? (
-        <div className="bg-white p-6 rounded-lg shadow-md w-96">
-          <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">
+        <div className="w-96 rounded-lg bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-center text-2xl font-bold text-gray-800">
             Prijava
           </h2>
           <input
@@ -84,55 +92,55 @@ const Authorization = () => {
             placeholder="Korisničko ime"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-4 py-2 mb-4 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mb-4 w-full rounded-md border px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="password"
             placeholder="Lozinka"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 mb-4 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mb-4 w-full rounded-md border px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleLogin}
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 mb-2"
+            className="mb-2 w-full rounded-md bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
           >
             Prijavi se
           </button>
           <NavLink
             to="/"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200 text-center inline-block"
+            className="inline-block w-full rounded-md bg-green-500 py-2 text-center text-white transition duration-200 hover:bg-green-600"
           >
             Povratak
           </NavLink>
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md w-96">
-          <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">
+        <div className="w-96 rounded-lg bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-center text-2xl font-bold text-gray-800">
             Pozdrav, {userInfo?.firstName} {userInfo?.lastName}
           </h2>
 
           <img
             src={userInfo?.image}
             alt="User"
-            className="rounded-full w-20 h-20 mx-auto mb-4"
+            className="mx-auto mb-4 size-20 rounded-full"
           />
           <button
             onClick={refreshAuthToken}
-            className="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600 transition duration-200 mb-2"
+            className="mb-2 w-full rounded-md bg-yellow-500 py-2 text-white transition duration-200 hover:bg-yellow-600"
           >
             Refresh Token
           </button>
           <button
             onClick={handleLogout}
-            className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition duration-200 mb-2"
+            className="mb-2 w-full rounded-md bg-red-500 py-2 text-white transition duration-200 hover:bg-red-600"
           >
             Odjavi se
           </button>
 
           <NavLink
             to="/"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200 text-center inline-block"
+            className="inline-block w-full rounded-md bg-green-500 py-2 text-center text-white transition duration-200 hover:bg-green-600"
           >
             Povratak
           </NavLink>

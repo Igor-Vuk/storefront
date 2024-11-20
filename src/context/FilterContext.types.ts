@@ -6,6 +6,15 @@ export interface FilterProviderProps {
 
 export type InputChangeEvent = ChangeEvent<HTMLInputElement>
 
+export interface Review {
+  comment: string
+  date: string
+  rating: number
+  reviewerEmail: string
+  reviewerName: string
+  // [key: string]: any
+}
+
 export interface Product {
   id: number
   title: string
@@ -19,14 +28,7 @@ export interface Product {
   thumbnail: string
   images: string[]
   warrantyInformation: string
-  reviews: Array<{
-    comment: string
-    date: string
-    rating: number
-    reviewerEmail: string
-    reviewerName: string
-    // [key: string]: any
-  }>
+  reviews: Review[]
   // [key: string]: any
 }
 
@@ -42,6 +44,18 @@ export interface Category {
 
 export interface CartItem extends Product {
   quantity: number
+}
+
+export interface UserInfo {
+  id: number
+  username: string
+  firstName: string
+  lastName: string
+  email: string
+  gender: string
+  image: string
+  accessToken: string
+  refreshToken: string
 }
 
 export interface PaginationProps {

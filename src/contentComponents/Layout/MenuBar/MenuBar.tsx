@@ -1,5 +1,5 @@
+import React, { useContext, useEffect, useState } from "react"
 import { NavLink, useLocation } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
 import { FilterContext } from "../../../context/FilterContext"
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"
 import {
@@ -11,37 +11,47 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
 import { AvatarIcon, RocketIcon } from "@radix-ui/react-icons"
+import { CartItem, UserInfo } from "../../../context/FilterContext.types"
 
-const Layout = () => {
+const MenuBar: React.FC = () => {
   const location = useLocation()
-  const { cart, isLoggedIn } = useContext(FilterContext)
+  const { cart, isLoggedIn } = useContext(FilterContext)!
 
-  const [userImage, setUserImage] = useState(null)
+  const [userInfo, setUserInfo] = useState<Omit<
+    UserInfo,
+    "accessToken" | "refreshToken"
+  > | null>(null)
 
   const isCartPage = location.pathname === "/kosarica"
   const isAuthPage = location.pathname === "/auth"
 
+  // Calculate total items in the cart
   const totalItems = Object.values(cart).reduce(
-    (total, item) => total + item.quantity,
+    (total: number, item: CartItem) => total + item.quantity,
     0,
   )
 
-  // Load user image from sessionStorage if logged in
+  // Load user information from sessionStorage if logged in
   useEffect(() => {
     if (isLoggedIn) {
-      const savedUserInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-      if (savedUserInfo?.image) {
-        setUserImage(savedUserInfo.image) // Set user image
+      const savedUserInfo: UserInfo | null = JSON.parse(
+        sessionStorage.getItem("userInfo") || "null",
+      )
+
+      if (savedUserInfo) {
+        /* Don't save accessToken and refresh token to state */
+        const { accessToken, refreshToken, ...filteredUserInfo } = savedUserInfo
+        setUserInfo(filteredUserInfo)
       }
     } else {
-      setUserImage(null) // Reset to null when logged out
+      setUserInfo(null) // Reset to null when logged out
     }
   }, [isLoggedIn])
 
   return (
     <Menubar className="flex h-auto items-center justify-between rounded-none border-0 border-b border-solid p-0">
       <div className="flex items-center">
-        {/* Hide SidebarTrigger */}
+        {/* Hide SidebarTrigger if on cart or auth page */}
         {!(isCartPage || isAuthPage) && <SidebarTrigger />}
       </div>
 
@@ -52,11 +62,11 @@ const Layout = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <MenubarTrigger className="hover:cursor-pointer">
-                    {isLoggedIn && userImage ? (
+                    {isLoggedIn && userInfo?.image ? (
                       <img
-                        src={userImage}
-                        alt="User Avatar"
-                        className="w-8 h-8 rounded-full object-cover"
+                        src={userInfo.image}
+                        alt={`${userInfo.firstName} ${userInfo.lastName}`}
+                        className="size-8 rounded-full object-cover"
                       />
                     ) : (
                       <AvatarIcon className="size-6" />
@@ -76,10 +86,10 @@ const Layout = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <MenubarTrigger className="rounded-none bg-green-500 hover:bg-green-600 hover:cursor-pointer flex items-center">
+                  <MenubarTrigger className="flex items-center rounded-none bg-green-500 hover:cursor-pointer hover:bg-green-600">
                     <RocketIcon className="size-6" />
                     {totalItems > 0 && (
-                      <span className="ml-2 rounded-full bg-red-500 text-white text-xs px-2 py-1">
+                      <span className="ml-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white">
                         {totalItems}
                       </span>
                     )}
@@ -97,4 +107,4 @@ const Layout = () => {
   )
 }
 
-export default Layout
+export default MenuBar

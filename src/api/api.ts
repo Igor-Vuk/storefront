@@ -1,3 +1,5 @@
+import { Category, Product, UserInfo } from "../context/FilterContext.types"
+
 const BASE_URL = "https://dummyjson.com"
 
 const apiEndpoints = {
@@ -9,24 +11,28 @@ const apiEndpoints = {
 
 const { LOGIN, REFRESH, PRODUCTS, CATEGORIES } = apiEndpoints
 
-const fetchCategories = async () => {
+const fetchCategories = async (): Promise<Category[]> => {
   try {
     const res = await fetch(CATEGORIES)
     const data = await res.json()
 
     if (!res.ok) {
       console.error("Fetch category response", data)
-      return
+      throw new Error("Failed to fetch categories")
     }
 
     return data
   } catch (error) {
-    console.error("Fetch category error", error)
-    return
+    console.error("Fetch category error:", error)
+    throw error
   }
 }
 
-const fetchProducts = async (selectedCategory, sortField, sortOrder) => {
+const fetchProducts = async (
+  selectedCategory: string,
+  sortField: string,
+  sortOrder: string,
+): Promise<Product[]> => {
   try {
     const baseProductUrl = selectedCategory
       ? `${PRODUCTS}/category/${selectedCategory}`
@@ -39,17 +45,20 @@ const fetchProducts = async (selectedCategory, sortField, sortOrder) => {
 
     if (!res.ok) {
       console.error("Fetch products response", data)
-      return
+      throw new Error("Failed to fetch products")
     }
 
     return data.products
   } catch (error) {
-    console.error("Fetch products error", error)
-    return
+    console.error("Fetch products error:", error)
+    throw error
   }
 }
 
-const loginUser = async (username, password) => {
+const loginUser = async (
+  username: string,
+  password: string,
+): Promise<UserInfo> => {
   try {
     const res = await fetch(LOGIN, {
       method: "POST",
@@ -70,7 +79,9 @@ const loginUser = async (username, password) => {
   }
 }
 
-const refreshToken = async (refreshToken) => {
+const refreshToken = async (
+  refreshToken: string,
+): Promise<{ accessToken: string; refreshToken: string }> => {
   try {
     const res = await fetch(REFRESH, {
       method: "POST",
@@ -84,7 +95,7 @@ const refreshToken = async (refreshToken) => {
       throw new Error(data.message || "Token refresh failed")
     }
 
-    return data
+    return data as { accessToken: string; refreshToken: string }
   } catch (error) {
     console.error("Token refresh error:", error)
     throw error
