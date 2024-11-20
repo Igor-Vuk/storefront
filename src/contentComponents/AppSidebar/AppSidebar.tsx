@@ -1,5 +1,4 @@
 import React from "react"
-import { NavLink } from "react-router-dom"
 
 import CategoryFilter from "../regularComponents/Home/CategoryFilter/CategoryFilter"
 import PriceRangeFilter from "../regularComponents/Home/PriceRangeFilter/PriceRangeFilter"
